@@ -1,5 +1,7 @@
 package io.github.espeditomelo.clientes.config;
 
+import io.github.espeditomelo.clientes.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,13 +15,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private UsuarioService usuarioService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.
-                inMemoryAuthentication()
-                .withUser("jose")
-                .password("123")
-                .roles("USER");
+        auth
+                .userDetailsService(usuarioService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Bean
